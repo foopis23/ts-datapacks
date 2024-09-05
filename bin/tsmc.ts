@@ -38,13 +38,13 @@ async function build(config: Config) {
 
 async function init(projectName: string) {
   const newProjectDir = path.resolve(process.cwd(), projectName);
-  const templateDir = path.resolve(__dirname, "../../template");
+  const templateDir = path.resolve(__dirname, "../template");
 
   // create the project directory
   await fs.mkdir(projectName, { recursive: true });
 
   // copy all files from the template directory to the project directory
-  await copyRecursive(templateDir, projectName);
+  await copyRecursive(templateDir, newProjectDir);
 
   // replace all instances of $name with the project name
   await replaceStringInTemplateFilesRecursive(newProjectDir, {

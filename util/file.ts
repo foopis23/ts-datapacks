@@ -20,21 +20,25 @@ export async function copyRecursive(srcDir: string, destDir: string) {
     const items = await readdir(srcDir);
 
     for (const item of items) {
-      const srcPath = `${srcDir}/${item}`;
-      const destPath = `${destDir}/${item}`;
+      try {
+        const srcPath = `${srcDir}/${item}`;
+        const destPath = `${destDir}/${item}`;
 
-      const itemStat = await stat(srcPath);
+        const itemStat = await stat(srcPath);
 
-      if (itemStat.isDirectory()) {
-        // If the item is a directory, recursively copy it
-        await copyRecursive(srcPath, destPath);
-      } else if (itemStat.isFile()) {
-        // If the item is a file, copy it to the destination
-        await cp(srcPath, destPath);
+        if (itemStat.isDirectory()) {
+          // If the item is a directory, recursively copy it
+          await copyRecursive(srcPath, destPath);
+        } else if (itemStat.isFile()) {
+          // If the item is a file, copy it to the destination
+          await cp(srcPath, destPath);
+        }
+      } catch (err) {
+        console.error(`Error copying item: ${srcDir}->${destDir} ${err}`);
       }
     }
   } catch (error) {
-    console.error(`Error during recursive copy: ${error}`);
+    console.error(error);
   }
 }
 

@@ -19,11 +19,11 @@ export const packConfigSchema = z.object({
     .transform((val) => path.resolve(process.cwd(), val)),
   generatedDir: z
     .string()
-    .default("./generated")
+    .default("./.generated")
     .transform((val) => path.resolve(process.cwd(), val)),
   outDir: z
     .string()
-    .default("./data-pack")
+    .default("./.data-pack")
     .transform((val) => path.resolve(process.cwd(), val)),
 });
 export type PackConfig = z.infer<typeof packConfigSchema>;

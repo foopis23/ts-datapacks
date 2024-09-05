@@ -11,6 +11,7 @@ ts-datapacks is a TypeScript library for creating Minecraft datapack. It started
 
 - [x] mcfunction generation (for doing macro like operations in mcfunction files)
 - [x] Static directory for non-generated files and/or unsupported features
+- [x] Project initialization
 - [ ] Syntax highlighting for embedded mcfunction strings
 - [ ] Type safe recipe definitions
 - [ ] Type safe dimension definitions

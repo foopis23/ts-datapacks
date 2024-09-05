@@ -20,4 +20,13 @@ ts-datapacks is a TypeScript library for creating Minecraft datapack. It started
 
 ## Getting Started
 
-Coming soon...
+### Requirements
+
+- bun (https://bun.sh/docs/installation)
+
+### Create New Project
+
+```bash
+bun add -g https://github.com/foopis23/ts-datapacks
+bux tsmc init <project-name> # this will create a new directory named ./<project-name> and create the initial project in there
+```

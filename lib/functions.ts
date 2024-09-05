@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createDirectoryIfNotExists } from "./file";
+import { createDirectoryIfNotExists } from "../util/file";
 import { writeFile } from "fs/promises";
 import path from "path";
 import { type PackConfig } from "./pack";

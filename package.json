@@ -2,7 +2,7 @@
   "name": "ts-datapacks",
   "module": "index.ts",
   "bin": {
-    "tsmc": "bin/tsmc.ts"
+    "tsmc": "bun bin/tsmc.ts"
   },
   "type": "module",
   "version": "0.1.0",

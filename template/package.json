@@ -1,0 +1,16 @@
+{
+  "name": "$project-name",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "build": "tsmc build"
+  },
+  "type": "module",
+  "dependencies": {
+    "ts-datapacks": "https://github.com/foopis23/ts-datapacks"
+  }
+}

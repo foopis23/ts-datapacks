@@ -1,9 +1,12 @@
 #!/usr/bin/env bun
-
+import path from "path";
 import fs from "fs/promises";
 import { program } from "commander";
 import { loadConfig } from "../util/config";
-import { copyRecursive } from "../util/file";
+import {
+  copyRecursive,
+  replaceStringInTemplateFilesRecursive,
+} from "../util/file";
 
 type Config = Awaited<ReturnType<typeof loadConfig>>;
 
@@ -31,6 +34,29 @@ async function build(config: Config) {
 
   // clean up
   await fs.rmdir(config.generatedDir, { recursive: true });
+}
+
+async function init(config: Config, projectName: string) {
+  // we need to copy all the files into template directory into ${process.cwd()}/${projectName}
+  // but anytime there is $name in the file, we need to replace it with projectName
+
+  const newProjectDir = path.resolve(process.cwd(), projectName);
+  const templateDir = path.resolve(__dirname, "../../template");
+
+  // create the project directory
+  await fs.mkdir(projectName, { recursive: true });
+
+  // copy all files from the template directory to the project directory
+  await copyRecursive(templateDir, projectName);
+
+  // replace all instances of $name with the project name
+  await replaceStringInTemplateFilesRecursive(newProjectDir, {
+    $name: projectName,
+  });
+
+  console.log(
+    `Initialized new project in ${newProjectDir}.\n Run 'cd ${projectName}' and 'bun install' to get started.`
+  );
 }
 
 program

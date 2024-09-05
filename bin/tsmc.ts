@@ -1,3 +1,5 @@
+#!/usr/bin/env bun
+
 import fs from 'fs/promises';
 import { program } from "commander";
 import { loadConfig } from "../util/config";

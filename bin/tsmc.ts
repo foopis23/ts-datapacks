@@ -67,6 +67,8 @@ program
   .argument("<projectName>", "Name of the project")
   .action(async (ctx) => {
     const projectName: string = ctx;
+    // TODO: validate project name is file system safe
+    // TODO: check if project already exists
 
     await init(projectName);
   });

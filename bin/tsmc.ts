@@ -36,10 +36,7 @@ async function build(config: Config) {
   await fs.rmdir(config.generatedDir, { recursive: true });
 }
 
-async function init(config: Config, projectName: string) {
-  // we need to copy all the files into template directory into ${process.cwd()}/${projectName}
-  // but anytime there is $name in the file, we need to replace it with projectName
-
+async function init(projectName: string) {
   const newProjectDir = path.resolve(process.cwd(), projectName);
   const templateDir = path.resolve(__dirname, "../../template");
 
@@ -67,8 +64,11 @@ program
 program
   .command("init")
   .description("Initialize a new data pack")
-  .action(() => {
-    throw new Error("Not implemented");
+  .argument("<projectName>", "Name of the project")
+  .action(async (ctx) => {
+    const projectName: string = ctx;
+
+    await init(projectName);
   });
 
 program

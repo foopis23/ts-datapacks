@@ -1,9 +1,9 @@
 import { packConfig, functionConfig, command } from "ts-datapacks";
 
-const name = "$name";
+const name = "$project-name";
 
 export default packConfig({
-  namespace: "cool_points",
+  namespace: "$project-name",
   functions: [
     functionConfig({
       name: "hello_world",

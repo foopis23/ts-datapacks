@@ -52,7 +52,7 @@ export async function replaceStringInFile(
 
     // Replace all variables in the file content
     for (const [variable, value] of Object.entries(variableMap)) {
-      fileContent = fileContent.replace(new RegExp(variable, "g"), value);
+      fileContent = fileContent.replaceAll(variable, value);
     }
 
     // Write the modified content back to the file

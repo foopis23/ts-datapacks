@@ -48,7 +48,7 @@ async function init(projectName: string) {
 
   // replace all instances of $name with the project name
   await replaceStringInTemplateFilesRecursive(newProjectDir, {
-    $name: projectName,
+    "$project-name": projectName,
   });
 
   console.log(

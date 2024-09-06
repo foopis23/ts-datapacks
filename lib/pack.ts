@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { functionConfigSchema, type FunctionConfig } from "./functions";
 import path from "path";
+import { recipeConfigSchema } from "./recipe";
 
 export type RawPackConfig = {
   functions?: FunctionConfig[];
@@ -12,6 +13,7 @@ export type RawPackConfig = {
 
 export const packConfigSchema = z.object({
   functions: z.array(functionConfigSchema).default([]),
+  recipes: z.array(recipeConfigSchema).default([]),
   namespace: z.string(),
   staticDir: z
     .string()

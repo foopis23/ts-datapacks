@@ -12,6 +12,7 @@ type Config = Awaited<ReturnType<typeof loadConfig>>;
 
 async function generate(config: Config) {
   await Promise.all(config.functions.map((func) => func.generate(config)));
+  await Promise.all(config.recipes.map((recipe) => recipe.generate(config)));
 }
 
 async function bundle(config: Config) {
@@ -26,6 +27,7 @@ async function bundle(config: Config) {
 
   // run all bundles tasks
   await Promise.all(config.functions.map((func) => func.bundle(config)));
+  await Promise.all(config.recipes.map((recipe) => recipe.bundle(config)));
 }
 
 async function build(config: Config) {

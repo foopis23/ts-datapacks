@@ -19,6 +19,7 @@ export function command(strings: TemplateStringsArray, ...values: unknown[]) {
   return func
     .split("\n")
     .map((line) => line.trim())
+    .filter((line) => line.length > 0) // remove empty lines
     .join("\n");
 }
 

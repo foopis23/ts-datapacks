@@ -44,7 +44,7 @@ export function functionConfig(config: {
         packConfig.generatedDir,
         "data",
         packConfig.namespace,
-        "functions"
+        "function"
       );
       await createDirectoryIfNotExists(funcDir);
       await writeFile(
@@ -58,13 +58,13 @@ export function functionConfig(config: {
         packConfig.generatedDir,
         "data",
         packConfig.namespace,
-        "functions"
+        "function"
       );
       const outFuncDir = path.resolve(
         packConfig.outDir,
         "data",
         packConfig.namespace,
-        "functions"
+        "function"
       );
       await createDirectoryIfNotExists(outFuncDir);
       await cp(

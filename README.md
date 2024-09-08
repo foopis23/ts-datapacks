@@ -39,4 +39,5 @@ bun run build
 ```
 
 ## Example Projects
+- [Example](./example/)
 - [Cool Points](https://github.com/foopis23/cool-points)

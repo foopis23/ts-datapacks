@@ -7,6 +7,9 @@ ts-datapacks is a TypeScript library for creating Minecraft datapack. It started
 - Type safe interface for creating Minecraft data packs
 - No need to learn a new language or syntax
 
+## Supports
+- Pack Version 48+ (1.21+)
+
 ## Features
 
 - [x] mcfunction generation (for doing macro like operations in mcfunction files)
@@ -19,6 +22,7 @@ ts-datapacks is a TypeScript library for creating Minecraft datapack. It started
 - [ ] Type safe advancement definitions
 - [ ] Type safe structure definitions
 - [ ] Type safe tag definitions
+- [ ] Older pack version support
 
 ## Getting Started
 
@@ -34,10 +38,12 @@ bux tsmc init <project-name> # this will create a new directory named ./<project
 ```
 
 ### Compile Data Pack
+
 ```bash
 bun run build
 ```
 
 ## Example Projects
+
 - [Example](./example/)
 - [Cool Points](https://github.com/foopis23/cool-points)

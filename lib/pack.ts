@@ -1,19 +1,20 @@
 import { z } from "zod";
-import { functionConfigSchema, type FunctionConfig } from "./functions";
+import { functionSchema, type Function } from "./functions";
 import path from "path";
-import { recipeConfigSchema } from "./recipe";
+import { recipeSchema, type Recipe } from "./recipe";
 
 export type RawPackConfig = {
-  functions?: FunctionConfig[];
+  functions?: Record<string, Function>;
+  recipes?: Record<string, Recipe>;
   namespace: string;
   staticDir?: string;
   generatedDir?: string;
   outDir?: string;
 };
 
-export const packConfigSchema = z.object({
-  functions: z.array(functionConfigSchema).default([]),
-  recipes: z.array(recipeConfigSchema).default([]),
+export const datapackSchema = z.object({
+  functions: z.record(z.string(), functionSchema).default({}),
+  recipes: z.record(z.string(), recipeSchema).default({}),
   namespace: z.string(),
   staticDir: z
     .string()
@@ -28,8 +29,8 @@ export const packConfigSchema = z.object({
     .default("./.data-pack")
     .transform((val) => path.resolve(process.cwd(), val)),
 });
-export type PackConfig = z.infer<typeof packConfigSchema>;
+export type DataPack = z.infer<typeof datapackSchema>;
 
-export function packConfig(config: RawPackConfig): PackConfig {
-  return packConfigSchema.parse(config);
+export function datapack(config: RawPackConfig): DataPack {
+  return datapackSchema.parse(config);
 }

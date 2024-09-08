@@ -7,12 +7,14 @@ import {
   copyRecursive,
   replaceStringInTemplateFilesRecursive,
 } from "../util/file";
+import { bundleRecipe, generateRecipe, type Recipe } from "../lib/recipe";
+import { bundleFunction, generateFunction } from "../lib/functions";
 
 type Config = Awaited<ReturnType<typeof loadConfig>>;
 
 async function generate(config: Config) {
-  await Promise.all(config.functions.map((func) => func.generate(config)));
-  await Promise.all(config.recipes.map((recipe) => recipe.generate(config)));
+  await Promise.all(Object.entries(config.functions).map(([slug, func]) => generateFunction(config, slug, func)));
+  await Promise.all(Object.entries(config.recipes).map(([slug, recipe]) => generateRecipe(config, slug, recipe)));
 }
 
 async function bundle(config: Config) {
@@ -26,8 +28,8 @@ async function bundle(config: Config) {
   await copyRecursive(config.staticDir, config.outDir);
 
   // run all bundles tasks
-  await Promise.all(config.functions.map((func) => func.bundle(config)));
-  await Promise.all(config.recipes.map((recipe) => recipe.bundle(config)));
+  await Promise.all(Object.keys(config.functions).map((slug) => bundleFunction(config, slug)));
+  await Promise.all(Object.keys(config.recipes).map((slug) => bundleRecipe(config, slug)));
 }
 
 async function build(config: Config) {

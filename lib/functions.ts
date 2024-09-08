@@ -2,7 +2,7 @@ import { z } from "zod";
 import { createDirectoryIfNotExists } from "../util/file";
 import { writeFile } from "fs/promises";
 import path from "path";
-import { type PackConfig } from "./pack";
+import { type DataPack } from "./pack";
 import { cp } from "fs/promises";
 
 export function command(strings: TemplateStringsArray, ...values: unknown[]) {
@@ -23,54 +23,46 @@ export function command(strings: TemplateStringsArray, ...values: unknown[]) {
     .join("\n");
 }
 
-export const functionConfigSchema = z.object({
-  name: z.string(),
-  content: z.string(),
-  generate: z.function(),
-  bundle: z.function(),
+export const functionSchema = z.object({
+  command: z.string(),
 });
-export type FunctionConfig = z.infer<typeof functionConfigSchema>;
+export type Function = z.infer<typeof functionSchema>;
 
-export function functionConfig(config: {
-  name: string;
-  command: string;
-}): FunctionConfig {
-  const { name, command: content } = config;
-  return functionConfigSchema.parse({
-    name: name,
-    content: content,
-    generate: async (packConfig: PackConfig) => {
-      const funcDir = path.resolve(
-        packConfig.generatedDir,
-        "data",
-        packConfig.namespace,
-        "function"
-      );
-      await createDirectoryIfNotExists(funcDir);
-      await writeFile(
-        path.resolve(funcDir, `${name}.mcfunction`),
-        content,
-        "utf-8"
-      );
-    },
-    bundle: async (packConfig: PackConfig) => {
-      const genFuncDir = path.resolve(
-        packConfig.generatedDir,
-        "data",
-        packConfig.namespace,
-        "function"
-      );
-      const outFuncDir = path.resolve(
-        packConfig.outDir,
-        "data",
-        packConfig.namespace,
-        "function"
-      );
-      await createDirectoryIfNotExists(outFuncDir);
-      await cp(
-        path.resolve(genFuncDir, `${name}.mcfunction`),
-        path.resolve(outFuncDir, `${name}.mcfunction`)
-      );
-    },
-  });
+export async function generateFunction(
+  config: DataPack,
+  name: string,
+  func: Function
+) {
+  const funcDir = path.resolve(
+    config.generatedDir,
+    "data",
+    config.namespace,
+    "function"
+  );
+  await createDirectoryIfNotExists(funcDir);
+  await writeFile(
+    path.resolve(funcDir, `${name}.mcfunction`),
+    func.command,
+    "utf-8"
+  );
+}
+
+export async function bundleFunction(config: DataPack, name: string) {
+  const genFuncDir = path.resolve(
+    config.generatedDir,
+    "data",
+    config.namespace,
+    "function"
+  );
+  const outFuncDir = path.resolve(
+    config.outDir,
+    "data",
+    config.namespace,
+    "function"
+  );
+  await createDirectoryIfNotExists(outFuncDir);
+  await cp(
+    path.resolve(genFuncDir, `${name}.mcfunction`),
+    path.resolve(outFuncDir, `${name}.mcfunction`)
+  );
 }

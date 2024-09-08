@@ -43,26 +43,27 @@ const baseCookingRecipe = baseRecipe.extend({
   cookingTime: z.number().optional(),
 });
 
+const baseCraftingRecipe = baseRecipe.extend({
+  result: resultItemWithCountSchema,
+});
+
 export const recipeSchema = z.union([
   baseCookingRecipe.extend({ type: z.literal("minecraft:blasting") }),
   baseCookingRecipe.extend({ type: z.literal("minecraft:campfire_cooking") }),
   baseCookingRecipe.extend({ type: z.literal("minecraft:smelting") }),
   baseCookingRecipe.extend({ type: z.literal("minecraft:smoking") }),
-  baseRecipe.extend({
+  baseCraftingRecipe.extend({
     type: z.literal("minecraft:crafting_shaped"),
     pattern: z.array(z.string()),
     key: z.record(z.string(), ingredientItemSchema),
-    result: resultItemWithCountSchema,
   }),
-  baseRecipe.extend({
+  baseCraftingRecipe.extend({
     type: z.literal("minecraft:crafting_shapeless"),
     ingredients: z.array(ingredientItemSchema),
-    result: resultItemWithCountSchema,
   }),
-  baseRecipe.extend({
+  baseCraftingRecipe.extend({
     type: z.literal("minecraft:stonecutting"),
     ingredient: ingredientItemSchema,
-    result: resultItemWithCountSchema,
   }),
 ]);
 

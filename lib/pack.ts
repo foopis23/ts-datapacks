@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { functionSchema, type Function } from "./functions";
 import path from "path";
-import { recipeSchema, type Recipe } from "./recipe";
+import { recipeSchema, type Recipe } from "./recipes";
 
 export type RawPackConfig = {
   functions?: Record<string, Function>;

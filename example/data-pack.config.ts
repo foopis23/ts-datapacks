@@ -6,33 +6,32 @@ import {
   type Recipe,
 } from "../index";
 
-// you can embedded your functions and recipes right into the config, or you can import them from another file
-
+// you can define variables and use them in the config.
 const name = "example datapack";
-
-/*
- * example of defining functions externally.
- *
- * You could export this from any file and import it here.
- *
- * After building, see ts-datapack-example/data/ts-datapack-example/function/giveStarterItems.mcfunction to see what this builds to
- */
-const itemList: ItemID[] = [
+const starterItemList: ItemID[] = [
   "minecraft:stone_sword",
   "minecraft:stone_pickaxe",
   "minecraft:stone_axe",
   "minecraft:stone_shovel",
 ];
+
+/**
+ * example of defining functions externally.
+ *
+ * You could export this from any file and import it here. After building, 
+ * see ts-datapack-example/data/ts-datapack-example/function/giveStarterItems.mcfunction 
+ * to see what this builds to
+ */
 const giveStarterItems: Function = {
-  command: command`${itemList.map((item) => command`give @s ${item}`)}`,
+  command: command`${starterItemList.map((item) => command`give @s ${item}`)}`,
 };
 
-/*
+/**
  * example of defining recipes externally.
  *
- * You could export this from any file and import it here.
- *
- * After building, see ts-datapack-example/data/ts-datapack-example/recipe/external_recipe.json to see what this builds to
+ * You could export this from any file and import it here. After building, 
+ * see ts-datapack-example/data/ts-datapack-example/recipe/external_recipe.json 
+ * to see what this builds to
  */
 const easyDiamondRecipe: Recipe = {
   type: "minecraft:crafting_shapeless",

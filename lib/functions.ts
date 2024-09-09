@@ -25,6 +25,7 @@ export function command(strings: TemplateStringsArray, ...values: unknown[]) {
 
 export const functionSchema = z.object({
   command: z.string(),
+  namespace: z.string().optional(),
 });
 export type Function = z.infer<typeof functionSchema>;
 
@@ -33,10 +34,11 @@ export async function generateFunction(
   name: string,
   func: Function
 ) {
+  const namespace = func.namespace ?? config.defaultNamespace;
   const funcDir = path.resolve(
     config.generatedDir,
     "data",
-    config.namespace,
+    namespace,
     "function"
   );
   await createDirectoryIfNotExists(funcDir);
@@ -47,19 +49,19 @@ export async function generateFunction(
   );
 }
 
-export async function bundleFunction(config: DataPack, name: string) {
+export async function bundleFunction(
+  config: DataPack,
+  name: string,
+  func: Function
+) {
+  const namespace = func.namespace ?? config.defaultNamespace;
   const genFuncDir = path.resolve(
     config.generatedDir,
     "data",
-    config.namespace,
+    namespace,
     "function"
   );
-  const outFuncDir = path.resolve(
-    config.outDir,
-    "data",
-    config.namespace,
-    "function"
-  );
+  const outFuncDir = path.resolve(config.outDir, "data", namespace, "function");
   await createDirectoryIfNotExists(outFuncDir);
   await cp(
     path.resolve(genFuncDir, `${name}.mcfunction`),

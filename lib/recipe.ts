@@ -34,6 +34,7 @@ export type RecipeBookCategory = z.infer<typeof recipeBookCategorySchema>;
 const baseRecipe = z.object({
   group: z.string().optional(),
   category: recipeBookCategorySchema.optional(),
+  namespace: z.string().optional(),
 });
 
 const baseCookingRecipe = baseRecipe.extend({
@@ -74,34 +75,49 @@ export async function generateRecipe(
   slug: string,
   recipe: Recipe
 ) {
+  const namespace = recipe.namespace ?? config.defaultNamespace;
   const recipeDir = path.resolve(
     config.generatedDir,
     "data",
-    config.namespace,
+    namespace,
     "recipe"
   );
   await createDirectoryIfNotExists(recipeDir);
 
+  const recipeJson = {
+    type: recipe.type,
+    group: recipe.group,
+    category: recipe.category,
+    result: recipe.result,
+    ...("pattern" in recipe && { pattern: recipe.pattern }),
+    ...("key" in recipe && { key: recipe.key }),
+    ...("ingredients" in recipe && { ingredients: recipe.ingredients }),
+    ...("ingredient" in recipe && { ingredient: recipe.ingredient }),
+    ...("experience" in recipe && { experience: recipe.experience }),
+    ...("cookingTime" in recipe && { cookingTime: recipe.cookingTime }),
+  };
+
   await writeFile(
     path.resolve(recipeDir, `${slug}.json`),
-    JSON.stringify(recipe, null, 2),
+    JSON.stringify(recipeJson, null, 2),
     "utf-8"
   );
 }
 
-export async function bundleRecipe(config: DataPack, slug: string) {
+export async function bundleRecipe(
+  config: DataPack,
+  slug: string,
+  recipe: Recipe
+) {
+  const namespace = recipe.namespace ?? config.defaultNamespace;
+
   const genRecipeDir = path.resolve(
     config.generatedDir,
     "data",
-    config.namespace,
+    namespace,
     "recipe"
   );
-  const outRecipeDir = path.resolve(
-    config.outDir,
-    "data",
-    config.namespace,
-    "recipe"
-  );
+  const outRecipeDir = path.resolve(config.outDir, "data", namespace, "recipe");
   await createDirectoryIfNotExists(outRecipeDir);
   await cp(
     path.resolve(genRecipeDir, `${slug}.json`),

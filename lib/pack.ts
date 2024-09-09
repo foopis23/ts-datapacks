@@ -6,7 +6,7 @@ import { recipeSchema, type Recipe } from "./recipe";
 export type RawPackConfig = {
   functions?: Record<string, Function>;
   recipes?: Record<string, Recipe>;
-  namespace: string;
+  defaultNamespace: string;
   staticDir?: string;
   generatedDir?: string;
   outDir?: string;
@@ -15,7 +15,7 @@ export type RawPackConfig = {
 export const datapackSchema = z.object({
   functions: z.record(z.string(), functionSchema).default({}),
   recipes: z.record(z.string(), recipeSchema).default({}),
-  namespace: z.string(),
+  defaultNamespace: z.string(),
   staticDir: z
     .string()
     .default("./static")

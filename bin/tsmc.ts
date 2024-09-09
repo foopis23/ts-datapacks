@@ -28,8 +28,8 @@ async function bundle(config: Config) {
   await copyRecursive(config.staticDir, config.outDir);
 
   // run all bundles tasks
-  await Promise.all(Object.keys(config.functions).map((slug) => bundleFunction(config, slug)));
-  await Promise.all(Object.keys(config.recipes).map((slug) => bundleRecipe(config, slug)));
+  await Promise.all(Object.keys(config.functions).map((slug) => bundleFunction(config, slug, config.functions[slug])));
+  await Promise.all(Object.keys(config.recipes).map((slug) => bundleRecipe(config, slug, config.recipes[slug])));
 }
 
 async function build(config: Config) {

@@ -8,7 +8,7 @@ const name = "example datapack";
  * example of defining functions externally.
  *
  * You could export this from any file and import it here.
- * 
+ *
  * After building, see ts-datapack-example/data/ts-datapack-example/function/external_function.mcfunction to see what this builds to
  */
 const itemList: ItemID[] = [
@@ -22,10 +22,11 @@ const giveStarterItems: Function = {
 };
 
 export default datapack({
-  namespace: "ts-datapack-example",
+  defaultNamespace: "ts-datapack-example",
   outDir: "ts-datapack-example",
   functions: {
     hello_world: {
+      namespace: "test",
       command: command`say "Hello, ${name}!"`,
     },
     external_function: giveStarterItems,

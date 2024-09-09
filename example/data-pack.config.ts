@@ -1,4 +1,10 @@
-import { datapack, command, type Function, type ItemID } from "../index";
+import {
+  datapack,
+  command,
+  type Function,
+  type ItemID,
+  type Recipe,
+} from "../index";
 
 // you can embedded your functions and recipes right into the config, or you can import them from another file
 
@@ -9,7 +15,7 @@ const name = "example datapack";
  *
  * You could export this from any file and import it here.
  *
- * After building, see ts-datapack-example/data/ts-datapack-example/function/external_function.mcfunction to see what this builds to
+ * After building, see ts-datapack-example/data/ts-datapack-example/function/giveStarterItems.mcfunction to see what this builds to
  */
 const itemList: ItemID[] = [
   "minecraft:stone_sword",
@@ -21,17 +27,36 @@ const giveStarterItems: Function = {
   command: command`${itemList.map((item) => command`give @s ${item}`)}`,
 };
 
+/*
+ * example of defining recipes externally.
+ *
+ * You could export this from any file and import it here.
+ *
+ * After building, see ts-datapack-example/data/ts-datapack-example/recipe/external_recipe.json to see what this builds to
+ */
+const easyDiamondRecipe: Recipe = {
+  type: "minecraft:crafting_shapeless",
+  ingredients: ["minecraft:dirt"],
+  result: {
+    id: "minecraft:diamond",
+    count: 64,
+  },
+};
+
 export default datapack({
-  defaultNamespace: "ts-datapack-example",
+  defaultNamespace: "ts-datapack-example", // the default namespace for all datapack data
   outDir: "ts-datapack-example",
   functions: {
+    // the key is the name of the function file
     hello_world: {
-      namespace: "test",
+      namespace: "another-namespace", // you can override the default namespace for any piece of data
       command: command`say "Hello, ${name}!"`,
     },
-    external_function: giveStarterItems,
+    giveStarterItems: giveStarterItems,
   },
   recipes: {
+    // the key is the name of the recipe file
+    easy_diamonds: easyDiamondRecipe,
     shaped_test: {
       type: "minecraft:crafting_shaped",
       pattern: ["AAA", "ABA", "AAA"],
@@ -41,14 +66,6 @@ export default datapack({
       },
       result: {
         id: "minecraft:sponge",
-      },
-    },
-    shapeless_test: {
-      type: "minecraft:crafting_shapeless",
-      ingredients: ["minecraft:dirt"],
-      result: {
-        id: "minecraft:sponge",
-        count: 64,
       },
     },
     blasting_test: {

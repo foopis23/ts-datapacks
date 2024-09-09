@@ -1,9 +1,8 @@
-import path from "path";
-import { itemIdSchema, type ItemID } from "./items";
+import { itemIdSchema } from "./items";
 import { z } from "zod";
 import type { DataPack } from "./pack";
-import { createDirectoryIfNotExists } from "../util/file";
-import { writeFile, cp } from "fs/promises";
+import { createDirectoryIfNotExists, getDatapackPath } from "../util/file";
+import { writeFile } from "fs/promises";
 
 export const ingredientItemSchema = z.union([
   itemIdSchema,
@@ -76,14 +75,13 @@ export async function generateRecipe(
   recipe: Recipe
 ) {
   const namespace = recipe.namespace ?? config.defaultNamespace;
-  const recipeDir = path.resolve(
-    config.generatedDir,
-    "data",
+  const { generated: recipePath } = getDatapackPath(config, "recipe", {
     namespace,
-    "recipe"
-  );
-  await createDirectoryIfNotExists(recipeDir);
+    fileName: slug,
+  });
+  await createDirectoryIfNotExists(recipePath);
 
+  // extract the recipes properties into a JSON object
   const recipeJson = {
     type: recipe.type,
     group: recipe.group,
@@ -97,30 +95,5 @@ export async function generateRecipe(
     ...("cookingTime" in recipe && { cookingTime: recipe.cookingTime }),
   };
 
-  await writeFile(
-    path.resolve(recipeDir, `${slug}.json`),
-    JSON.stringify(recipeJson, null, 2),
-    "utf-8"
-  );
-}
-
-export async function bundleRecipe(
-  config: DataPack,
-  slug: string,
-  recipe: Recipe
-) {
-  const namespace = recipe.namespace ?? config.defaultNamespace;
-
-  const genRecipeDir = path.resolve(
-    config.generatedDir,
-    "data",
-    namespace,
-    "recipe"
-  );
-  const outRecipeDir = path.resolve(config.outDir, "data", namespace, "recipe");
-  await createDirectoryIfNotExists(outRecipeDir);
-  await cp(
-    path.resolve(genRecipeDir, `${slug}.json`),
-    path.resolve(outRecipeDir, `${slug}.json`)
-  );
+  await writeFile(recipePath, JSON.stringify(recipeJson, null, 2), "utf-8");
 }

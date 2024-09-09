@@ -1,9 +1,7 @@
 import { z } from "zod";
-import { createDirectoryIfNotExists } from "../util/file";
+import { createDirectoryIfNotExists, getDatapackPath } from "../util/file";
 import { writeFile } from "fs/promises";
-import path from "path";
 import { type DataPack } from "./pack";
-import { cp } from "fs/promises";
 
 export function command(strings: TemplateStringsArray, ...values: unknown[]) {
   // turn arrays into strings seperated by newlines
@@ -35,36 +33,10 @@ export async function generateFunction(
   func: Function
 ) {
   const namespace = func.namespace ?? config.defaultNamespace;
-  const funcDir = path.resolve(
-    config.generatedDir,
-    "data",
+  const { generated: filePath } = getDatapackPath(config, "function", {
     namespace,
-    "function"
-  );
-  await createDirectoryIfNotExists(funcDir);
-  await writeFile(
-    path.resolve(funcDir, `${name}.mcfunction`),
-    func.command,
-    "utf-8"
-  );
-}
-
-export async function bundleFunction(
-  config: DataPack,
-  name: string,
-  func: Function
-) {
-  const namespace = func.namespace ?? config.defaultNamespace;
-  const genFuncDir = path.resolve(
-    config.generatedDir,
-    "data",
-    namespace,
-    "function"
-  );
-  const outFuncDir = path.resolve(config.outDir, "data", namespace, "function");
-  await createDirectoryIfNotExists(outFuncDir);
-  await cp(
-    path.resolve(genFuncDir, `${name}.mcfunction`),
-    path.resolve(outFuncDir, `${name}.mcfunction`)
-  );
+    fileName: name,
+  });
+  await createDirectoryIfNotExists(filePath);
+  await writeFile(filePath, func.command, "utf-8");
 }

@@ -51,7 +51,7 @@ export default datapack({
       namespace: "another-namespace", // you can override the default namespace for any piece of data
       command: command`say "Hello, ${name}!"`,
     },
-    giveStarterItems: giveStarterItems,
+    give_starter_items: giveStarterItems,
   },
   recipes: {
     // the key is the name of the recipe file

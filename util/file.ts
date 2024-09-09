@@ -1,7 +1,14 @@
+import path from "path";
 import { existsSync } from "fs";
 import { mkdir, readdir, stat, cp, readFile, writeFile } from "fs/promises";
+import type { DataPack } from "../lib/pack";
 
 export async function createDirectoryIfNotExists(directory: string) {
+  // if the path ends with a file extension, remove it
+  if (path.extname(directory)) {
+    directory = path.dirname(directory);
+  }
+
   if (!existsSync(directory)) {
     await mkdir(directory, { recursive: true });
   }
@@ -31,7 +38,7 @@ export async function copyRecursive(srcDir: string, destDir: string) {
           await copyRecursive(srcPath, destPath);
         } else if (itemStat.isFile()) {
           // If the item is a file, copy it to the destination
-          await cp(srcPath, destPath);
+          await cp(srcPath, destPath, { errorOnExist: false });
         }
       } catch (err) {
         console.error(`Error copying item: ${srcDir}->${destDir} ${err}`);
@@ -84,4 +91,58 @@ export async function replaceStringInTemplateFilesRecursive(
   } catch (error) {
     console.error(`Error during recursive string replacement: ${error}`);
   }
+}
+
+type DataType = "function" | "recipe";
+
+function getDatatypeFileExtension(type: DataType) {
+  switch (type) {
+    case "function":
+      return ".mcfunction";
+    case "recipe":
+      return ".json";
+    default:
+      throw new Error(`Unknown datatype: ${type}`);
+  }
+}
+
+function getDatapackBaseDir(
+  config: DataPack,
+  type: DataType,
+  namespace?: string
+) {
+  if (!namespace) {
+    namespace = "minecraft";
+  }
+
+  if (namespace !== "minecraft") {
+    return {
+      generated: path.resolve(config.generatedDir, "data", namespace, type),
+      out: path.resolve(config.outDir, "data", namespace, type),
+    };
+  }
+
+  return {
+    generated: path.resolve(config.generatedDir, "data", type),
+    out: path.resolve(config.outDir, "data", type),
+  };
+}
+
+export function getDatapackPath(
+  config: DataPack,
+  type: DataType,
+  { namespace, fileName }: { namespace?: string; fileName?: string }
+) {
+  const baseDir = getDatapackBaseDir(config, type, namespace);
+
+  if (!fileName) {
+    return baseDir;
+  }
+
+  fileName += getDatatypeFileExtension(type);
+
+  return {
+    generated: path.resolve(baseDir.generated, fileName),
+    out: path.resolve(baseDir.out, fileName),
+  };
 }

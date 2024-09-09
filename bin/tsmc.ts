@@ -44,7 +44,7 @@ debugSubCommands
 
 debugSubCommands
   .command("bundle")
-  .description("Bundle the data pack")
+  .description("Bundle pre-generated files into the output directory. This is mostly for debugging.")
   .action(async () => {
     await TSDataPack.fromDefaultConfig().then((tsDataPack) =>
       tsDataPack.bundle()
